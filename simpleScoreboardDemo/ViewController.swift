@@ -47,14 +47,14 @@ class ViewController: UIViewController {
     @IBOutlet weak var leftNameText: UITextField!
     @IBOutlet weak var rightNameText: UITextField!
     
-    var leftScoresValue = 0
-    var rightScoresValue = 0
-    var leftWinsValue = 0
-    var rightWinsValue = 0
-    var played = 0
-    var states = Stack()
-    var leftName = "player 1"
-    var rightName = "player 2"
+    var leftScoresValue = 0  // 目前左邊的分數
+    var rightScoresValue = 0 // 目前右邊的分數
+    var leftWinsValue = 0    // 目前左邊贏的局數
+    var rightWinsValue = 0   // 目前右邊贏的局數
+    var played = 0           // 目前已比完的局數
+    var states = Stack()     // 可以回溯的 Stack 裡面可以存下每一個狀態 State (快照)
+    var leftName = "player 1"  // 目前左邊的玩家名稱
+    var rightName = "player 2" // 目前右邊的玩家名稱
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -73,25 +73,6 @@ class ViewController: UIViewController {
         return true
     }
 
-    @IBAction func rewind(_ sender: Any) {
-        if states.peek() != nil {
-            let state = states.pop()
-            
-            leftScoresValue = state.leftScoresValue
-            rightScoresValue = state.rightScoresValue
-            leftWinsValue = state.leftWinsValue
-            rightWinsValue = state.rightWinsValue
-            played = state.played
-            
-            leftServeLabel.isHidden = state.leftServeLabelValue
-            rightServeLabel.isHidden = state.rightServeLabelValue
-            
-            leftNameText.text = state.leftName
-            rightNameText.text = state.rightName
-            
-            updateAllScores()
-        }
-    }
     
     func snapshot() {
         let state = State(leftScoresValue: leftScoresValue, rightScoresValue: rightScoresValue, leftWinsValue: leftWinsValue, rightWinsValue: rightWinsValue, played: played, leftServeLabelValue: leftServeLabel.isHidden, rightServeLabelValue: rightServeLabel.isHidden, leftName: leftName, rightName: rightName)
@@ -164,6 +145,27 @@ class ViewController: UIViewController {
         rightScoresValue = 0
         updateAllScores()
     }
+    
+    @IBAction func rewind(_ sender: Any) {
+        if states.peek() != nil {
+            let state = states.pop()
+            
+            leftScoresValue = state.leftScoresValue
+            rightScoresValue = state.rightScoresValue
+            leftWinsValue = state.leftWinsValue
+            rightWinsValue = state.rightWinsValue
+            played = state.played
+            
+            leftServeLabel.isHidden = state.leftServeLabelValue
+            rightServeLabel.isHidden = state.rightServeLabelValue
+            
+            leftNameText.text = state.leftName
+            rightNameText.text = state.rightName
+            
+            updateAllScores()
+        }
+    }
+    
     
     @IBAction func changeSide(_ sender: Any) {
         snapshot()
